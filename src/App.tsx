@@ -1,8 +1,12 @@
+import FileInput from "./component/fileInput/FileInput";
 
 const App = () => {
-  return(
-    <h2>Witaj</h2>
-  )
-}
+  return (
+    <div>
+      <h2>Witaj</h2>
+      <FileInput></FileInput>
+    </div>
+  );
+};
 
 export default App;
