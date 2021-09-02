@@ -1,8 +1,10 @@
 import { CSVReader } from "react-papaparse";
 import { mapHeader } from "../../helpers/HeaderTransformHelper";
-import { ITraining } from "../../model/Training";
+import { ITraining, IInterval } from "../../model/Training";
+import { IFileInputProps } from "./FileInputModel"
 
-const InputFile = () => {
+const InputFile = (props: IFileInputProps) => {
+
   const mapCSVHeader = (value: string) => {
     return mapHeader(value);
   };
@@ -12,11 +14,12 @@ const InputFile = () => {
     transformHeader: (headerValue: string) => mapCSVHeader(headerValue),
   };
 
-  const handleOnFileLoaded = (data: any, file: any) => {
-    const training: ITraining = data;
-    console.log(typeof training);
-    console.log(training);
-    console.log(file);
+  const handleOnFileLoaded = (fileData: any) => {
+    const intervals: IInterval[] = fileData.map(
+      (item: { data: any }) => item.data as IInterval
+    );
+    const training: ITraining = { data: intervals };
+    props.fileLoadedHandler(training)
   };
 
   return (
