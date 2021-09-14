@@ -17,6 +17,10 @@ const InputFile = (props: IFileInputProps) => {
   const handleOnFileLoaded = (fileData: any) => {
     const intervals: IInterval[] = fileData.map((item: { data: any }) => {
       const interval = item.data as IInterval;
+      interval.distance = Number(item.data.distance);
+      interval.calories = Number(item.data.calories);
+      interval.averageHeartRate = Number(item.data.averageHeartRate);
+      interval.maxHeartRate = Number(item.data.maxHeartRate);
       interval.id = uuidv4();
       return interval;
     });

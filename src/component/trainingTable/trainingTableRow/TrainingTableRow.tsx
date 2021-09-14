@@ -1,24 +1,30 @@
+import { useDispatch, RootStateOrAny, useSelector } from "react-redux";
+
+import { IInterval } from "../../../model/Training";
+import { intervalSelectedRowActions } from "../../../store/index";
 import { ITrainingTableRowProps } from "./TrainingTableRowModel";
-import { useState } from "react";
-import styles from "./TrainingTableRow.module.css"
+import styles from "./TrainingTableRow.module.css";
 
 const TrainingTableRow = (props: ITrainingTableRowProps) => {
+  const dispatch = useDispatch();
 
-    const [selected, setSelected] = useState(false)
+  const selectedRows: IInterval[] = useSelector(
+    (state: RootStateOrAny) => state.intervalSelectedRow.selectedRows
+  );
 
-    console.log(selected)
+  const onClickHandler = () => {
+    dispatch(intervalSelectedRowActions.rowHandle(props.row));
+  };
 
-    const onClickHandler = () => {
-        setSelected((prevState) => {
-            return !prevState
-        })
-    }
+  const isRowSelected = (): boolean => {
+    return selectedRows.filter(row => row.id === props.row.id).length > 0
+  }
 
   return (
     <tr
       onClick={onClickHandler}
       key={props.row.id}
-      className={`${selected && styles['selected-row']}`}
+      className={`${isRowSelected() && styles["selected-row"]}`}
     >
       <td>{props.row.time}</td>
       <td>{props.row.distance}</td>

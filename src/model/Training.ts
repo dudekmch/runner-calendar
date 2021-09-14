@@ -6,7 +6,7 @@ export interface ITraining {
 export interface IInterval {
   id: string;
   time: string;
-  distance: string;
+  distance: number;
   intervalNumber: number;
   calories: number;
   maxHeartRate: number;

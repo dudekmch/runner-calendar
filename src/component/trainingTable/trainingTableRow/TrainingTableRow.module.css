@@ -1,4 +1,4 @@
 .selected-row {
-    border-color: yellowgreen;
-    border-width: 2px 2px !important;
+    background-color: darkslategray !important;
+    color: floralwhite !important;
 }
