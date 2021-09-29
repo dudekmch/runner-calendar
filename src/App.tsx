@@ -15,9 +15,9 @@ const App = () => {
   };
 
   return (
-    <Container fluid>
+    <Container>
       <Row>
-        <FileInput fileLoadedHandler={onFileLoaded}></FileInput>
+        { !isTrainingSet && <FileInput fileLoadedHandler={onFileLoaded}></FileInput> }
         {isTrainingSet && (
           <TrainingTableContainer training={training}></TrainingTableContainer>
         )}

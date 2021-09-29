@@ -4,7 +4,6 @@ export const calculateAvarageValue = (
   values: number[],
   round: boolean
 ): number => {
-    console.log(values)
   const sumOfValues = values.reduce((prevValue, currentValue) => {
     return prevValue + currentValue;
   });

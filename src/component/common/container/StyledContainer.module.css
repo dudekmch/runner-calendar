@@ -1,0 +1,22 @@
+.container-card {
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    border: 0.1rem solid rgb(102, 199, 150) !important;
+    box-shadow: 0rem 0rem 0.5rem 0.25rem rgba(0,0,0,0.21);
+  }
+  
+  .container-card ul {
+    list-style-type: none !important;
+  }
+  
+  .container-card ul li {
+    border-bottom: 0.15rem solid transparent !important;
+  }
+  
+  .container-card ul li:hover {
+    border-bottom: 0.15rem solid rgb(199, 102, 152) !important;
+  }
+  
+  .container-card footer {
+    text-align: right;
+  }

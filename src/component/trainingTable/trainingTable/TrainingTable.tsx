@@ -2,7 +2,6 @@ import { Table } from "react-bootstrap";
 import { RootStateOrAny, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid"; 
 
-import SummaryRow from "../summaryRow/SummaryRow";
 import { ITrainingTableProps } from "./TrainingTableModel";
 import TrainingTableRow from "../trainingTableRow/TrainingTableRow";
 import { IInterval } from "../../../model/Training";
@@ -38,9 +37,6 @@ const TrainingTable = (props: ITrainingTableProps) => {
     <div>
       <Table striped bordered hover>
         <thead>
-          {selectedRows.length !== 0 && (
-            <SummaryRow intervals={selectedRows} />
-          )}
           <tr>
             <th>Czas</th>
             <th>Dystans</th>
