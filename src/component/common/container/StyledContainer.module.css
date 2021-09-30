@@ -1,7 +1,7 @@
 .container-card {
     margin-top: 1rem;
     border-radius: 0.5rem;
-    border: 0.1rem solid rgb(102, 199, 150) !important;
+    border: 0.1rem solid rgb(0,0,0,0.21) !important;
     box-shadow: 0rem 0rem 0.5rem 0.25rem rgba(0,0,0,0.21);
   }
   

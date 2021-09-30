@@ -4,27 +4,21 @@ import { useSelector, RootStateOrAny } from "react-redux";
 import { CheckBoxType } from "../../common/checkbox/CheckBoxModel";
 import FilterForm from "../filterForm/FilterForm";
 import TrainingTable from "../trainingTable/TrainingTable";
+import HeaderContainer from "../headerContainer/HeaderContainer";
 import { ITrainingTableContainerProps } from "./TrainingTableContainerModel";
 import { IInterval } from "../../../model/Training";
 import StyledContainer from "../../common/container/StyledContainer";
-import SummaryContainer from "../summaryRow/SummaryContainer";
 
 const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
-
   const selectedRows: IInterval[] = useSelector(
     (state: RootStateOrAny) => state.intervalSelectedRow.selectedRows
   );
 
   return (
     <>
-      <StyledContainer>
-        <Row>
-          <Col>
-            <SummaryContainer />
-          </Col>
-          <Col></Col>
-        </Row>
-      </StyledContainer>
+      {selectedRows.length !== 0 && (
+        <HeaderContainer selectedRows={selectedRows} />
+      )}
       <StyledContainer>
         <Row>
           <Col>
@@ -34,6 +28,8 @@ const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
             ></FilterForm>
           </Col>
         </Row>
+      </StyledContainer>
+      <StyledContainer>
         <Row>
           <Col>
             <TrainingTable
