@@ -1,7 +1,6 @@
-import { Col, Row, Button } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { Col, Row } from "react-bootstrap";
+import { useSelector, RootStateOrAny } from "react-redux";
 
-import { intervalSelectedRowActions } from "../../../store/index";
 import { CheckBoxType } from "../../common/checkbox/CheckBoxModel";
 import FilterForm from "../filterForm/FilterForm";
 import TrainingTable from "../trainingTable/TrainingTable";
@@ -11,8 +10,10 @@ import StyledContainer from "../../common/container/StyledContainer";
 import SummaryContainer from "../summaryRow/SummaryContainer";
 
 const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
-  const dispatch = useDispatch();
-  dispatch(intervalSelectedRowActions.resetSelectedRows());
+
+  const selectedRows: IInterval[] = useSelector(
+    (state: RootStateOrAny) => state.intervalSelectedRow.selectedRows
+  );
 
   return (
     <>
@@ -21,8 +22,7 @@ const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
           <Col>
             <SummaryContainer />
           </Col>
-          <Col>
-          </Col>
+          <Col></Col>
         </Row>
       </StyledContainer>
       <StyledContainer>
@@ -36,7 +36,10 @@ const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
         </Row>
         <Row>
           <Col>
-            <TrainingTable intervals={props.training.data}></TrainingTable>
+            <TrainingTable
+              intervals={props.training.data}
+              selectedIntervalIds={selectedRows.map((row: IInterval) => row.id)}
+            ></TrainingTable>
           </Col>
         </Row>
       </StyledContainer>

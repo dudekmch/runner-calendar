@@ -1,6 +1,6 @@
 import { Table } from "react-bootstrap";
 import { RootStateOrAny, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid"; 
+import { v4 as uuidv4 } from "uuid";
 
 import { ITrainingTableProps } from "./TrainingTableModel";
 import TrainingTableRow from "../trainingTableRow/TrainingTableRow";
@@ -9,10 +9,6 @@ import { IInterval } from "../../../model/Training";
 const TrainingTable = (props: ITrainingTableProps) => {
   const filters: string[] = useSelector(
     (state: RootStateOrAny) => state.intervalTypesFilter.filters
-  );
-
-  const selectedRows: IInterval[] = useSelector(
-    (state: RootStateOrAny) => state.intervalSelectedRow.selectedRows
   );
 
   let filteredIntervals: IInterval[] = props.intervals;
@@ -27,8 +23,18 @@ const TrainingTable = (props: ITrainingTableProps) => {
     }
   };
 
+  const isRowSelected = (row: IInterval): boolean => {
+    return props.selectedIntervalIds.includes(row.id);
+  };
+
   const createRows = () => {
-    return filteredIntervals.map((item) => <TrainingTableRow row={item} key={uuidv4()}/>);
+    return filteredIntervals.map((item) => (
+      <TrainingTableRow
+        row={item}
+        key={uuidv4()}
+        isSelected={isRowSelected(item)}
+      />
+    ));
   };
 
   applyFilters();
