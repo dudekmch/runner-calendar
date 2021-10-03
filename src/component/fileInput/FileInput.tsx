@@ -37,6 +37,7 @@ const InputFile = (props: IFileInputProps) => {
         noDrag
         style={{}}
         addRemoveButton
+        onRemoveFile={props.fileRemoveHandler}
       >
         <span>Click to upload.</span>
       </CSVReader>

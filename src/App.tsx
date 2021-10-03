@@ -1,26 +1,13 @@
-import { useState } from "react";
 import { Container, Row } from "react-bootstrap";
 
-import FileInput from "./component/fileInput/FileInput";
 import TrainingTableContainer from "./component/trainingTable/trainingTableContainer/TraingTableContainer";
-import { ITraining } from "./model/Training";
 
 const App = () => {
-  const [training, setTrainig] = useState({} as ITraining);
-  const [isTrainingSet, setTariningSet] = useState(false);
-
-  const onFileLoaded = (training: ITraining) => {
-    setTrainig(training);
-    setTariningSet(true);
-  };
 
   return (
     <Container>
       <Row>
-        { !isTrainingSet && <FileInput fileLoadedHandler={onFileLoaded}></FileInput> }
-        {isTrainingSet && (
-          <TrainingTableContainer training={training}></TrainingTableContainer>
-        )}
+          <TrainingTableContainer></TrainingTableContainer>
       </Row>
     </Container>
   );

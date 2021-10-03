@@ -1,22 +1,35 @@
 import { Col, Row } from "react-bootstrap";
 import { useSelector, RootStateOrAny } from "react-redux";
+import { useState } from "react";
 
 import { CheckBoxType } from "../../common/checkbox/CheckBoxModel";
 import FilterForm from "../filterFormContainer/FilterForm";
 import TrainingTable from "../trainingTable/TrainingTable";
 import HeaderContainer from "../headerContainer/HeaderContainer";
-import { ITrainingTableContainerProps } from "./TrainingTableContainerModel";
-import { IInterval } from "../../../model/Training";
+import { IInterval, ITraining } from "../../../model/Training";
 import StyledContainer from "../../common/container/StyledContainer";
 
-const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
+const TrainingTableContainer = () => {
+  const [training, setTrainig] = useState({} as ITraining);
+  const [isTrainingSet, setTariningSet] = useState(false);
+
   const selectedRows: IInterval[] = useSelector(
     (state: RootStateOrAny) => state.intervalSelectedRow.selectedRows
   );
 
+  const onFileLoaded = (training: ITraining) => {
+    setTrainig(training);
+    setTariningSet(true);
+  };
+
+  const onFileRemove = () => {
+    setTrainig({} as ITraining);
+    setTariningSet(false);
+  };
+
   const getDistinctIntervalTypes = (): Set<string> => {
     const types = new Set<string>();
-    props.training.data
+    training.data
       .filter((interval) => interval.type !== undefined)
       .forEach((interval) => types.add(interval.type));
     return types;
@@ -26,7 +39,10 @@ const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
     <>
       <HeaderContainer
         selectedRows={selectedRows}
-        allRows={props.training.data}
+        allRows={training.data}
+        fileLoadedHandler={onFileLoaded}
+        isTrainingSet={isTrainingSet}
+        fileRemoveHandler={onFileRemove}
       />
       {getDistinctIntervalTypes.length !== 0 && (
         <StyledContainer>
@@ -41,14 +57,19 @@ const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
         </StyledContainer>
       )}
       <StyledContainer>
-        <Row>
-          <Col>
-            <TrainingTable
-              intervals={props.training.data}
-              selectedIntervalIds={selectedRows.map((row: IInterval) => row.id)}
-            ></TrainingTable>
-          </Col>
-        </Row>
+        {isTrainingSet && (
+          <Row>
+            <Col>
+              <TrainingTable
+                intervals={training.data}
+                selectedIntervalIds={selectedRows.map(
+                  (row: IInterval) => row.id
+                )}
+              ></TrainingTable>
+            </Col>
+          </Row>
+        )}
+        {!isTrainingSet && <h2 style={{textAlign: "center"}}>Załaduj plik *.CSV</h2>}
       </StyledContainer>
     </>
   );

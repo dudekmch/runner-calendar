@@ -7,6 +7,7 @@ import TrainingSummary from "./trainingSummary/TrainingSummary";
 import { IInterval } from "../../../model/Training";
 
 import styles from "./HeaderContainer.module.css";
+import FileInput from "../../fileInput/FileInput";
 
 const HeaderContainer = (props: IHeaderContainerProps) => {
   const getSummaryRow = (): IInterval | undefined => {
@@ -19,16 +20,19 @@ const HeaderContainer = (props: IHeaderContainerProps) => {
       <StyledContainer styleNames={new Array(`${styles["container-appear"]}`)}>
         <Row>
           <Col>
+            <FileInput fileLoadedHandler={props.fileLoadedHandler} fileRemoveHandler={props.fileRemoveHandler}></FileInput>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <TrainingSummary summaryRow={getSummaryRow()} />
-          </Col>
-          <Col>
-            <SelectedRowsSummary selectedRows={props.selectedRows} />
-          </Col>
-        </Row>
+        {props.isTrainingSet && (
+          <Row>
+            <Col>
+              <TrainingSummary summaryRow={getSummaryRow()} />
+            </Col>
+            <Col>
+              <SelectedRowsSummary selectedRows={props.selectedRows} />
+            </Col>
+          </Row>
+        )}
       </StyledContainer>
     </>
   );
