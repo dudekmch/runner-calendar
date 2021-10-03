@@ -2,7 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import { useSelector, RootStateOrAny } from "react-redux";
 
 import { CheckBoxType } from "../../common/checkbox/CheckBoxModel";
-import FilterForm from "../filterForm/FilterForm";
+import FilterForm from "../filterFormContainer/FilterForm";
 import TrainingTable from "../trainingTable/TrainingTable";
 import HeaderContainer from "../headerContainer/HeaderContainer";
 import { ITrainingTableContainerProps } from "./TrainingTableContainerModel";
@@ -14,21 +14,32 @@ const TrainingTableContainer = (props: ITrainingTableContainerProps) => {
     (state: RootStateOrAny) => state.intervalSelectedRow.selectedRows
   );
 
+  const getDistinctIntervalTypes = (): Set<string> => {
+    const types = new Set<string>();
+    props.training.data
+      .filter((interval) => interval.type !== undefined)
+      .forEach((interval) => types.add(interval.type));
+    return types;
+  };
+
   return (
     <>
-      {selectedRows.length !== 0 && (
-        <HeaderContainer selectedRows={selectedRows} />
+      <HeaderContainer
+        selectedRows={selectedRows}
+        allRows={props.training.data}
+      />
+      {getDistinctIntervalTypes.length !== 0 && (
+        <StyledContainer>
+          <Row>
+            <Col>
+              <FilterForm
+                checkBoxType={CheckBoxType.CHECKBOX}
+                distinctIntervalTypes={getDistinctIntervalTypes()}
+              ></FilterForm>
+            </Col>
+          </Row>
+        </StyledContainer>
       )}
-      <StyledContainer>
-        <Row>
-          <Col>
-            <FilterForm
-              checkBoxType={CheckBoxType.CHECKBOX}
-              training={props.training}
-            ></FilterForm>
-          </Col>
-        </Row>
-      </StyledContainer>
       <StyledContainer>
         <Row>
           <Col>

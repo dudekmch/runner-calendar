@@ -2,23 +2,36 @@ import { Col, Row } from "react-bootstrap";
 
 import StyledContainer from "../../common/container/StyledContainer";
 import { IHeaderContainerProps } from "./HeaderContainerModel";
-import SummaryContainer from "../summaryContainer/SummaryContainer";
+import SelectedRowsSummary from "./selectedRowsSummary/SelectedRowsSummary";
+import TrainingSummary from "./trainingSummary/TrainingSummary";
+import { IInterval } from "../../../model/Training";
 
 import styles from "./HeaderContainer.module.css";
 
 const HeaderContainer = (props: IHeaderContainerProps) => {
-    return (
-        <>
-        <StyledContainer
-          styleNames={new Array(`${styles["container-appear"]}`)}
-        >
-          <Row>
-            <Col>{props.selectedRows.length !== 0 && <SummaryContainer />}</Col>
-            <Col></Col>
-          </Row>
-        </StyledContainer>
-      </>
-    )
-}
+  const getSummaryRow = (): IInterval | undefined => {
+    const calories: number[] = props.allRows.map((item) => item.calories);
+    const biggestCalories = Math.max(...calories);
+    return props.allRows.find((item) => item.calories === biggestCalories);
+  };
+  return (
+    <>
+      <StyledContainer styleNames={new Array(`${styles["container-appear"]}`)}>
+        <Row>
+          <Col>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <TrainingSummary summaryRow={getSummaryRow()} />
+          </Col>
+          <Col>
+            <SelectedRowsSummary selectedRows={props.selectedRows} />
+          </Col>
+        </Row>
+      </StyledContainer>
+    </>
+  );
+};
 
-export default HeaderContainer
+export default HeaderContainer;

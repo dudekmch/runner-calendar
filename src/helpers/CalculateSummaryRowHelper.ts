@@ -1,5 +1,8 @@
 import moment from "moment";
 
+export const FORMAT_PEACE = 'mm:ss'
+export const FORMAT_TIME = 'HH:mm:ss'
+
 export const calculateAvarageValue = (
   values: number[],
   round: boolean
@@ -15,10 +18,24 @@ export const calculateAvarageValue = (
   }
 };
 
-export const calculateAvarageTime = (times: string[]): string => {
+export const calculateAvarageTime = (times: string[], format: string): string => {
   const timesInSeconds = times.map((time) => convertTimeToSeconds(time));
   const avarageTime = calculateAvarageValue(timesInSeconds, true);
-  return moment.utc(avarageTime * 1000).format("HH:mm:ss");
+  return moment.utc(avarageTime * 1000).format(format);
+};
+
+export const calculateSum = (values: number[]): number => {
+  return values.reduce((prevValue, currentValue) => {
+    return prevValue + currentValue;
+  });
+};
+
+export const calculateSumOfTimes = (times: string[], format: string): string => {
+  const timesInSeconds = times.map((time) => convertTimeToSeconds(time));
+  const sumTimeInSeconds = timesInSeconds.reduce((prevValue, currentValue) => {
+    return prevValue + currentValue;
+  });
+  return moment.utc(sumTimeInSeconds * 1000).format(format);
 };
 
 const convertTimeToSeconds = (time: string): number => {

@@ -3,5 +3,5 @@ import { CheckBoxType } from "../../common/checkbox/CheckBoxModel";
 
 export interface IFilterFormProps {
     checkBoxType: CheckBoxType,
-    training: ITraining
+    distinctIntervalTypes: Set<string>
 }

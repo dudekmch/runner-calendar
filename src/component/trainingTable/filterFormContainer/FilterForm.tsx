@@ -17,14 +17,8 @@ const FilterForm = (props: IFilterFormProps) => {
     }
   };
 
-  const getDistinctIntervalTypes = () => {
-    const types = new Set<string>();
-    props.training.data.forEach((interval) => types.add(interval.type));
-    return Array.from(types);
-  };
-
   const createCheckBoxes = () => {
-    return getDistinctIntervalTypes().map((item) => {
+    return Array.from(props.distinctIntervalTypes).map((item) => {
       return (
         <CheckBox
           key={uuidv4()}
