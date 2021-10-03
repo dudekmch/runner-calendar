@@ -5,7 +5,7 @@ export interface IHeaderContainerProps {
   allRows: IInterval[];
   fileLoadedHandler(fileInput: ITraining):  void;
   fileRemoveHandler(): void;
-  isTrainingSet: boolean
+  isTrainingSet: boolean;
 }
 
 export default IHeaderContainerProps;

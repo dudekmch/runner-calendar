@@ -1,3 +1,6 @@
+import { Button, Col, Row } from 'react-bootstrap'
+import { useDispatch } from 'react-redux';
+
 import {
   calculateAvarageTime,
   calculateAvarageValue,
@@ -9,8 +12,11 @@ import {
 import StyledContainer from "../../../common/container/StyledContainer";
 import { IInterval } from "../../../../model/Training";
 import { ISelectedRowsSummaryProps } from "./SelectedRowsSummaryModel";
+import { intervalSelectedRowActions } from "../../../../store/index";
 
 const SelectedRowsSummary = (props: ISelectedRowsSummaryProps) => {
+  const dispatch = useDispatch();
+  
   const selectedRows: IInterval[] = props.selectedRows
 
   const calculateSumIntervalsTime = (): string => {
@@ -47,12 +53,19 @@ const SelectedRowsSummary = (props: ISelectedRowsSummaryProps) => {
     return calculateAvarageValue(avarageHeartRates, true);
   };
 
+  const restSelectedRowsHandler = () => {
+    dispatch(intervalSelectedRowActions.resetSelectedRows())
+  }
+
   return (
     <>
       <StyledContainer>
         <h2>Wyniki dla zaznaczonych</h2>
         {selectedRows.length > 0 && (
-          <ul>
+          <>
+          <Row>
+            <Col>
+            <ul>
             <li>Czas: {calculateSumIntervalsTime()}</li>
             <li>Dystans: {calculateDistanceSum()}</li>
             <li>Kalorie: {calculateAvaregeIntervalsCalories()}</li>
@@ -61,10 +74,15 @@ const SelectedRowsSummary = (props: ISelectedRowsSummaryProps) => {
               Średnie tętno: {calculateAvaregeIntervalsAvarageHeartRate()}
             </li>
             <li>
-              Średnie tętno maksymalne:{" "}
-              {calculateAvaregeIntervalsMaxHeartRate()}
+              Średnie tętno maksymalne: {calculateAvaregeIntervalsMaxHeartRate()}
             </li>
           </ul>
+            </Col>
+            <Col>
+            <Button onClick={restSelectedRowsHandler}>Resetuj zaznaczenia</Button>
+            </Col>
+          </Row>
+          </>
         )}
         {selectedRows.length === 0 && <p>Brak zaznaczonych interwałów</p>}
       </StyledContainer>

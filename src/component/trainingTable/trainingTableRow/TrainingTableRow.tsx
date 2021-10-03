@@ -11,10 +11,6 @@ const TrainingTableRow = (props: ITrainingTableRowProps) => {
     dispatch(intervalSelectedRowActions.rowHandle(props.row));
   };
 
-  // const isRowSelected = (): boolean => {
-  //   return selectedRows.filter(row => row.id === props.row.id).length > 0
-  // }
-
   return (
     <tr
       onClick={onClickHandler}

@@ -1,3 +1,4 @@
+import { Button, Col, Row } from "react-bootstrap";
 import StyledContainer from "../../../common/container/StyledContainer";
 import { ITrainigSummaryProps } from "./TrainingSummaryModel";
 
@@ -6,6 +7,8 @@ const TrainingSummary = (props: ITrainigSummaryProps) => {
     <>
       <StyledContainer>
         <h2>Podsumowanie</h2>
+        <Row>
+            <Col>
         {props.summaryRow && (
           <ul>
             <li>Czas: {props.summaryRow?.time}</li>
@@ -17,6 +20,12 @@ const TrainingSummary = (props: ITrainigSummaryProps) => {
           </ul>
         )}
         {!props.summaryRow && <p>Brak podsumowania</p>}
+        </Col>
+        <Col>
+        <Button>Zapisz trening</Button>
+        {/* <Button variant="danger">Usuń trening</Button> */}
+        </Col>
+        </Row>
       </StyledContainer>
     </>
   );
