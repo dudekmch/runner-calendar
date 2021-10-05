@@ -6,23 +6,23 @@ const TrainingSummary = (props: ITrainigSummaryProps) => {
   return (
     <>
       <StyledContainer>
-        <h2>Podsumowanie</h2>
+        <h2>Summary</h2>
         <Row>
             <Col>
         {props.summaryRow && (
           <ul>
-            <li>Czas: {props.summaryRow?.time}</li>
-            <li>Dystans: {props.summaryRow?.distance}</li>
-            <li>Kalorie: {props.summaryRow?.calories}</li>
-            <li>Średnie tempo: {props.summaryRow?.averagePace}</li>
-            <li>Średnie tętno: {props.summaryRow?.averageHeartRate}</li>
-            <li>Średnie tętno maksymalne:{props.summaryRow?.maxHeartRate}</li>
+            <li>Time: {props.summaryRow?.time}</li>
+            <li>Distance: {props.summaryRow?.distance}</li>
+            <li>Calories: {props.summaryRow?.calories}</li>
+            <li>Pace: {props.summaryRow?.averagePace}</li>
+            <li>Avg. heartrate: {props.summaryRow?.averageHeartRate}</li>
+            <li>Avg. max heartrate:{props.summaryRow?.maxHeartRate}</li>
           </ul>
         )}
         {!props.summaryRow && <p>Brak podsumowania</p>}
         </Col>
         <Col>
-        <Button>Zapisz trening</Button>
+        <Button>Save workout</Button>
         {/* <Button variant="danger">Usuń trening</Button> */}
         </Col>
         </Row>

@@ -60,31 +60,31 @@ const SelectedRowsSummary = (props: ISelectedRowsSummaryProps) => {
   return (
     <>
       <StyledContainer>
-        <h2>Wyniki dla zaznaczonych</h2>
-        {selectedRows.length > 0 && (
-          <>
+        <h2>Summary for selected</h2>
           <Row>
-            <Col>
+          {selectedRows.length > 0 && (
+            <>
+            <Col>         
             <ul>
-            <li>Czas: {calculateSumIntervalsTime()}</li>
-            <li>Dystans: {calculateDistanceSum()}</li>
-            <li>Kalorie: {calculateAvaregeIntervalsCalories()}</li>
-            <li>Średnie tempo: {calculateAvaregeIntervalsPace()}</li>
+            <li>Time: {calculateSumIntervalsTime()}</li>
+            <li>Distance: {calculateDistanceSum()}</li>
+            <li>Calories: {calculateAvaregeIntervalsCalories()}</li>
+            <li>Pace: {calculateAvaregeIntervalsPace()}</li>
             <li>
-              Średnie tętno: {calculateAvaregeIntervalsAvarageHeartRate()}
+            Avg. heartrate: {calculateAvaregeIntervalsAvarageHeartRate()}
             </li>
             <li>
-              Średnie tętno maksymalne: {calculateAvaregeIntervalsMaxHeartRate()}
+            Avg. max heartrate: {calculateAvaregeIntervalsMaxHeartRate()}
             </li>
           </ul>
             </Col>
             <Col>
-            <Button onClick={restSelectedRowsHandler}>Resetuj zaznaczenia</Button>
+            <Button onClick={restSelectedRowsHandler}>Reset selected</Button>
             </Col>
-          </Row>
-          </>
-        )}
-        {selectedRows.length === 0 && <p>Brak zaznaczonych interwałów</p>}
+            </>
+          )}
+          </Row>   
+        {selectedRows.length === 0 && <p>No selected intervals</p>}
       </StyledContainer>
     </>
   );

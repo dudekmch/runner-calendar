@@ -1,3 +1,4 @@
+import { Route } from "react-router-dom";
 import { Col, Container, Row } from "react-bootstrap";
 import CreateAccountPage from "./component/auth/authForm/createAccount/CreateAccountPage";
 import LoginPage from "./component/auth/authForm/login/LoginPage";
@@ -8,23 +9,25 @@ const App = () => {
   return (
     <>
       <Container>
+        <Container>
         <Row>
           <Col></Col>
           <Col>
+            <Route path="/login">
             <LoginPage></LoginPage>
-          </Col>
-          <Col></Col>
-        </Row>
-        <Row>
-          <Col></Col>
-          <Col>
+            </Route>
+            <Route path="/createAccount">
             <CreateAccountPage></CreateAccountPage>
+            </Route>
           </Col>
           <Col></Col>
         </Row>
+        </Container>
+        <Route path="/trainingTable">
         <Row>
           <TrainingTableContainer></TrainingTableContainer>
         </Row>
+        </Route>
       </Container>
     </>
   );

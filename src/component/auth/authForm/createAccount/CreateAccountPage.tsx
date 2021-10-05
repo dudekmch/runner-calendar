@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
+import { useHistory } from "react-router";
 import StyledContainer from "../../../common/container/StyledContainer";
 
 const CreateAccountPage = () => {
+  const history = useHistory()
   const [isFirstLoad, setFirstLoad] = useState(true);
   const [isPasswordValid, setPasswordValid] = useState(false);
   const [isPasswordConfimed, setPasswordConfimed] = useState(false);
@@ -38,12 +40,16 @@ const CreateAccountPage = () => {
     }
   };
 
+  const onSwitchLogInModeButtonHandler = () => {
+    history.push('/login')
+  }
+
   return (
     <StyledContainer>
       <Row>
         <Col>
           <Form onSubmit={submitHandler}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Group className="mb-3" controlId="formCreateAccountEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
                 type="email"
@@ -53,7 +59,7 @@ const CreateAccountPage = () => {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Group className="mb-3" controlId="formCreateAccountPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
@@ -67,7 +73,7 @@ const CreateAccountPage = () => {
             </Form.Group>
             <Form.Group
               className="mb-3"
-              controlId="formBasicPasswordConfirmation"
+              controlId="formCreateAccountPasswordConfirmation"
             >
               <Form.Label>Confirm password</Form.Label>
               <Form.Control
@@ -88,7 +94,7 @@ const CreateAccountPage = () => {
             <Button variant="primary" type="submit">
               Create account
             </Button>
-            <Button variant="link">or log in</Button>
+            <Button variant="link" onClick={onSwitchLogInModeButtonHandler}>or login</Button>
           </Form>
         </Col>
       </Row>

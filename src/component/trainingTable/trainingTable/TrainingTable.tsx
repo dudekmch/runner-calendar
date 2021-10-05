@@ -44,14 +44,14 @@ const TrainingTable = (props: ITrainingTableProps) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Czas</th>
-            <th>Dystans</th>
-            <th>Interwał</th>
-            <th>Kalorie</th>
-            <th>Tętno maksymalne</th>
-            <th>Typ</th>
-            <th>Średnie tempo</th>
-            <th>Średnie tętno</th>
+            <th>Time</th>
+            <th>Distance</th>
+            <th>Interval</th>
+            <th>Calories</th>
+            <th>Max heartrate</th>
+            <th>Type</th>
+            <th>Pace</th>
+            <th>Avg. heartrate</th>
           </tr>
         </thead>
         <tbody>{createRows()}</tbody>
