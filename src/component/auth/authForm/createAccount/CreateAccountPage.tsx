@@ -1,48 +1,114 @@
-import { useRef, useState } from "react";
+import { createUserWithEmailAndPassword } from "@firebase/auth";
+import { useRef, useReducer, useEffect } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
+import { firebaseAuth } from "../../../../Firebase"
 import StyledContainer from "../../../common/container/StyledContainer";
 
+interface ICredentialState {
+  email: string | null;
+  password: {
+    value: string | null;
+    isValid: boolean;
+    isConfirmed: boolean;
+  };
+}
+
+const initialICredentialState: ICredentialState = {
+  email: null,
+  password: {
+    value: null,
+    isValid: false,
+    isConfirmed: false,
+  },
+};
+
+enum CredentialActionType {
+  checkCredetialValid = "VALIDATION",
+}
+
+interface ICredentialAction {
+  type: CredentialActionType;
+  payload: {
+    email: string;
+    password: string;
+    repeatedPassword: string;
+  };
+}
+
+const credentialReducer = (
+  state: ICredentialState,
+  action: ICredentialAction
+) => {
+  if (action.type === CredentialActionType.checkCredetialValid) {
+    return {
+      email: action.payload.email,
+      password: {
+        value: action.payload.password,
+        isValid: checkIsPasswordValid(action.payload.password),
+        isConfirmed:
+          action.payload.password === action.payload.repeatedPassword,
+      },
+    };
+  }
+  return state;
+};
+
+const checkIsPasswordValid = (password: string): boolean => {
+  return password.length >= 8;
+};
+
 const CreateAccountPage = () => {
-  const history = useHistory()
-  const [isFirstLoad, setFirstLoad] = useState(true);
-  const [isPasswordValid, setPasswordValid] = useState(false);
-  const [isPasswordConfimed, setPasswordConfimed] = useState(false);
+  const history = useHistory();
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const passwordConfirmationInputRef = useRef<HTMLInputElement>(null);
 
-  const checkIsPasswordValid = (): boolean => {
-    if (passwordInputRef.current) {
-      return passwordInputRef.current.value.length >= 8;
-    }
-    return false;
-  };
-
-  const checkIsPasswordConfimed = (): boolean => {
-    if (passwordInputRef.current && passwordConfirmationInputRef.current) {
-      return (
-        passwordInputRef.current.value ===
-        passwordConfirmationInputRef.current.value
-      );
-    }
-    return false;
-  };
+  const [credentialState, dispatchCredential] = useReducer(
+    credentialReducer,
+    initialICredentialState
+  );
 
   const submitHandler = (event: React.FormEvent<EventTarget>) => {
-    setFirstLoad(false);
-    setPasswordValid(checkIsPasswordValid());
-    setPasswordConfimed(checkIsPasswordConfimed());
-    event.preventDefault();
-    if (isPasswordValid && isPasswordConfimed) {
-      console.log("LOGIN!!!!");
+    if (
+      passwordInputRef.current &&
+      passwordConfirmationInputRef.current &&
+      emailInputRef.current
+    ) {
+      dispatchCredential({
+        type: CredentialActionType.checkCredetialValid,
+        payload: {
+          email: emailInputRef.current.value,
+          password: passwordInputRef.current.value,
+          repeatedPassword: passwordConfirmationInputRef.current.value,
+        },
+      });
+      event.preventDefault();
     }
   };
 
+  useEffect(() => {
+    if (credentialState.email &&
+      credentialState.password.value &&
+      credentialState.password.isConfirmed &&
+      credentialState.password.isValid) {
+      createUserWithEmailAndPassword(firebaseAuth, credentialState.email, credentialState.password.value)
+        .then((userCredential) => {
+          console.log(userCredential)
+          history.push("/login");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage)
+        });
+    }
+  }, [credentialState, history]);
+
   const onSwitchLogInModeButtonHandler = () => {
-    history.push('/login')
-  }
+    history.push("/login");
+  };
 
   return (
     <StyledContainer>
@@ -83,18 +149,21 @@ const CreateAccountPage = () => {
                 required
               />
             </Form.Group>
-            {!isPasswordValid && !isFirstLoad && (
-              <Alert variant={"danger"}>
-                Hasło nie spełnia minimalnych wymagań
-              </Alert>
-            )}
-            {!isPasswordConfimed && !isFirstLoad && (
+            {!credentialState.password.isValid &&
+              !credentialState.password.isConfirmed && (
+                <Alert variant={"danger"}>
+                  Hasło nie spełnia minimalnych wymagań
+                </Alert>
+              )}
+            {!credentialState.password.isConfirmed && (
               <Alert variant={"danger"}>Hasła są rózne</Alert>
             )}
             <Button variant="primary" type="submit">
               Create account
             </Button>
-            <Button variant="link" onClick={onSwitchLogInModeButtonHandler}>or login</Button>
+            <Button variant="link" onClick={onSwitchLogInModeButtonHandler}>
+              or login
+            </Button>
           </Form>
         </Col>
       </Row>

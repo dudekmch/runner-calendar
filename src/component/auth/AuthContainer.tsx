@@ -9,7 +9,7 @@ const AuthContainer = () => {
       <Row>
         <Col></Col>
         <Col>
-          <Route path="/loginPage">
+          <Route path="/login">
             <LoginPage></LoginPage>
           </Route>
           <Route path="/createAccount">
