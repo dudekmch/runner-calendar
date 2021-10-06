@@ -18,7 +18,7 @@ const LoginPage = () => {
     console.log(emailInputRef.current?.value, passwordInputRef.current?.value);
     if (emailInputRef.current?.value && passwordInputRef.current?.value) {
       const request: IRequestConfig = {
-        url: "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDyJhuaReJZdL2-OMap8dnNW_HTa037Ukg",
+        url: "",
         method: HttpMethod.POST,
         body: {
             email: emailInputRef.current.value,
