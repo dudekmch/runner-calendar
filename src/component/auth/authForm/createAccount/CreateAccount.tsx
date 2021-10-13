@@ -1,74 +1,19 @@
 import { createUserWithEmailAndPassword } from "@firebase/auth";
-import { useRef, useReducer, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
 import { firebaseAuth } from "../../../../Firebase"
 import StyledContainer from "../../../common/container/StyledContainer";
+import { ICreateAccountProps } from "./CreateAccountModel";
+import useCredentials, { CredentialActionType } from "./UseCredentials";
 
-interface ICredentialState {
-  email: string | null;
-  password: {
-    value: string | null;
-    isValid: boolean;
-    isConfirmed: boolean;
-  };
-}
-
-const initialICredentialState: ICredentialState = {
-  email: null,
-  password: {
-    value: null,
-    isValid: false,
-    isConfirmed: false,
-  },
-};
-
-enum CredentialActionType {
-  checkCredetialValid = "VALIDATION",
-}
-
-interface ICredentialAction {
-  type: CredentialActionType;
-  payload: {
-    email: string;
-    password: string;
-    repeatedPassword: string;
-  };
-}
-
-const credentialReducer = (
-  state: ICredentialState,
-  action: ICredentialAction
-) => {
-  if (action.type === CredentialActionType.checkCredetialValid) {
-    return {
-      email: action.payload.email,
-      password: {
-        value: action.payload.password,
-        isValid: checkIsPasswordValid(action.payload.password),
-        isConfirmed:
-          action.payload.password === action.payload.repeatedPassword,
-      },
-    };
-  }
-  return state;
-};
-
-const checkIsPasswordValid = (password: string): boolean => {
-  return password.length >= 8;
-};
-
-const CreateAccountPage = () => {
+const CreateAccount = (props: ICreateAccountProps) => {
   const history = useHistory();
+  const credentials = useCredentials()
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const passwordConfirmationInputRef = useRef<HTMLInputElement>(null);
-
-  const [credentialState, dispatchCredential] = useReducer(
-    credentialReducer,
-    initialICredentialState
-  );
 
   const submitHandler = (event: React.FormEvent<EventTarget>) => {
     if (
@@ -76,7 +21,7 @@ const CreateAccountPage = () => {
       passwordConfirmationInputRef.current &&
       emailInputRef.current
     ) {
-      dispatchCredential({
+      credentials.dispatchCredential({
         type: CredentialActionType.checkCredetialValid,
         payload: {
           email: emailInputRef.current.value,
@@ -89,22 +34,23 @@ const CreateAccountPage = () => {
   };
 
   useEffect(() => {
-    if (credentialState.email &&
-      credentialState.password.value &&
-      credentialState.password.isConfirmed &&
-      credentialState.password.isValid) {
-      createUserWithEmailAndPassword(firebaseAuth, credentialState.email, credentialState.password.value)
+    
+    if (credentials.email &&
+      credentials.passwordValue &&
+      credentials.isPasswordConfirmed &&
+      credentials.isPasswordValid) {
+      createUserWithEmailAndPassword(firebaseAuth, credentials.email, credentials.passwordValue)
         .then((userCredential) => {
           console.log(userCredential)
-          history.push("/login");
+          props.onCreateAccountSuccessHandler()
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorCode, errorMessage)
+          console.error(errorCode, errorMessage)
         });
     }
-  }, [credentialState, history]);
+  }, [credentials, props]);
 
   const onSwitchLogInModeButtonHandler = () => {
     history.push("/login");
@@ -149,13 +95,12 @@ const CreateAccountPage = () => {
                 required
               />
             </Form.Group>
-            {!credentialState.password.isValid &&
-              !credentialState.password.isConfirmed && (
+            {!credentials.isPasswordValid && (
                 <Alert variant={"danger"}>
                   Hasło nie spełnia minimalnych wymagań
                 </Alert>
               )}
-            {!credentialState.password.isConfirmed && (
+            {!credentials.isPasswordConfirmed && (
               <Alert variant={"danger"}>Hasła są rózne</Alert>
             )}
             <Button variant="primary" type="submit">
@@ -171,4 +116,4 @@ const CreateAccountPage = () => {
   );
 };
 
-export default CreateAccountPage;
+export default CreateAccount;

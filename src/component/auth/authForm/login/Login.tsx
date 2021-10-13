@@ -1,35 +1,44 @@
-import { useRef, useEffect } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { useEffect, useRef, useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { firebaseAuth } from "../../../../Firebase";
+import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
-
-import useHttp, { HttpMethod, IRequestConfig } from "../../../../hook/UseHttp";
 import StyledContainer from "../../../common/container/StyledContainer";
 
-const LoginPage = () => {
+import { ILoginProps } from "./LoginModel";
+
+const Login = (props: ILoginProps) => {
   const history = useHistory();
+
+  const [login, setLogin] = useState(null as string | null);
+  const [password, setPassword] = useState(null as string | null);
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
-  const { isLoading, error, sendRequest: sendLoginRequest } = useHttp();
-
   const submitHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault();
-    console.log(emailInputRef.current?.value, passwordInputRef.current?.value);
     if (emailInputRef.current?.value && passwordInputRef.current?.value) {
-      const request: IRequestConfig = {
-        url: "",
-        method: HttpMethod.POST,
-        body: {
-            email: emailInputRef.current.value,
-            password: passwordInputRef.current.value,
-            returnSecureToken: true
-        },
-        headers: {'Content-Type': 'application/json'}
-      };
-      sendLoginRequest(request, (data) => console.log(data));
+      setLogin(emailInputRef.current.value);
+      setPassword(passwordInputRef.current.value);
     }
   };
+
+  useEffect(() => {
+    if (login && password) {
+      console.log(login, password);
+      signInWithEmailAndPassword(firebaseAuth, login, password)
+        .then((userCredential) => {
+          console.log(userCredential);
+          history.push('/trainingTable')
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error(errorCode, errorMessage);
+        });
+    }
+  }, [login, password, history]);
 
   const onSwitchCreateAccountModeButtonHandler = () => {
     history.push("/createAccount");
@@ -59,10 +68,20 @@ const LoginPage = () => {
                 required
               />
             </Form.Group>
+            {props.isCreatedAccoountSuccessContext && (
+              <Alert variant={"success"}>
+                registration was successful, please login
+              </Alert>
+            )}
             <Button variant="primary" type="submit">
               Login
             </Button>
-            <Button variant="link" onClick={onSwitchCreateAccountModeButtonHandler}>or create account</Button>
+            <Button
+              variant="link"
+              onClick={onSwitchCreateAccountModeButtonHandler}
+            >
+              or create account
+            </Button>
           </Form>
         </Col>
       </Row>
@@ -70,4 +89,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
