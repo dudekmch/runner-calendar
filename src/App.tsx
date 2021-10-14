@@ -2,15 +2,16 @@ import { Container } from "react-bootstrap";
 
 import TrainingTableContainer from "./component/trainingTable/trainingTableContainer/TraingTableContainer";
 import AuthContainer from "./component/auth/AuthContainer";
+import Layout from "./component/layaut/Layaut";
 
 const App = () => {
   return (
-    <>
-      <Container>
+    <Container>
+      <Layout>
         <AuthContainer />
         <TrainingTableContainer />
-      </Container>
-    </>
+      </Layout>
+    </Container>
   );
 };
 

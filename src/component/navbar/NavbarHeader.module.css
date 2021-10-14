@@ -1,0 +1,8 @@
+.navbar-header {
+  margin-top: 1rem !important;
+  border-radius: 0.5rem !important;
+  border: 0.1rem solid rgb(0, 0, 0, 0.21) !important;
+  box-shadow: 0rem 0rem 0.5rem 0.25rem rgba(0, 0, 0, 0.21) !important;
+  padding: 1rem !important;
+  text-decoration: none !important;
+}

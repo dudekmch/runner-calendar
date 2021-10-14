@@ -72,7 +72,7 @@ const TrainingTableContainer = () => {
           </Row>
         )}
         {!isTrainingSet && (
-          <h2 style={{ textAlign: "center" }}>Załaduj plik *.CSV</h2>
+          <h2 style={{ textAlign: "center" }}>Load *.csv file</h2>
         )}
       </StyledContainer>
     </Container>
