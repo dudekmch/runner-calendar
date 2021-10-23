@@ -1,47 +1,46 @@
-import { useEffect, useRef, useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { firebaseAuth } from "../../../../Firebase";
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-import { useHistory } from "react-router";
-import StyledContainer from "../../../common/container/StyledContainer";
+import {useRef} from 'react';
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import {firebaseAuth} from '../../../../Firebase';
+import {Alert, Button, Col, Form, Row} from 'react-bootstrap';
+import {useHistory, useLocation} from 'react-router';
+import StyledContainer from '../../../common/container/StyledContainer';
 
-import { ILoginProps } from "./LoginModel";
+import useError from '../../../../hook/UseError';
 
-const Login = (props: ILoginProps) => {
+const Login = () => {
   const history = useHistory();
-
-  const [login, setLogin] = useState(null as string | null);
-  const [password, setPassword] = useState(null as string | null);
+  const location = useLocation();
+  const loginError = useError();
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
+  const queryParams = new URLSearchParams(location.search)
+  const isCreateAccountSuccessfulContext = queryParams.get('createUserSuccess') === 'true'
+
   const submitHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault();
     if (emailInputRef.current?.value && passwordInputRef.current?.value) {
-      setLogin(emailInputRef.current.value);
-      setPassword(passwordInputRef.current.value);
+      signInWithEmailAndPassword(
+        firebaseAuth,
+        emailInputRef.current.value,
+        passwordInputRef.current.value
+      )
+        .then((userCredential) => {
+          history.push('/trainingTable');
+        })
+        .catch((error) => {
+          console.error(error.message);
+          loginError.setError({
+            isError: true,
+            messages: [error.message],
+          });
+        });
     }
   };
 
-  useEffect(() => {
-    if (login && password) {
-      console.log(login, password);
-      signInWithEmailAndPassword(firebaseAuth, login, password)
-        .then((userCredential) => {
-          console.log(userCredential);
-          history.push('/trainingTable')
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error(errorCode, errorMessage);
-        });
-    }
-  }, [login, password, history]);
-
   const onSwitchCreateAccountModeButtonHandler = () => {
-    history.push("/createAccount");
+    history.push('/createAccount');
   };
 
   return (
@@ -49,35 +48,38 @@ const Login = (props: ILoginProps) => {
       <Row>
         <Col>
           <Form onSubmit={submitHandler}>
-            <Form.Group className="mb-3" controlId="formLoginEmail">
+            <Form.Group className='mb-3' controlId='formLoginEmail'>
               <Form.Label>Email address</Form.Label>
               <Form.Control
-                type="email"
-                placeholder="Enter email"
+                type='email'
+                placeholder='Enter email'
                 ref={emailInputRef}
                 required
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formLoginPassword">
+            <Form.Group className='mb-3' controlId='formLoginPassword'>
               <Form.Label>Password</Form.Label>
               <Form.Control
-                type="password"
-                placeholder="Password"
+                type='password'
+                placeholder='Password'
                 ref={passwordInputRef}
                 required
               />
             </Form.Group>
-            {props.isCreatedAccoountSuccessContext && (
-              <Alert variant={"success"}>
+            {isCreateAccountSuccessfulContext && (
+              <Alert variant={'success'}>
                 registration was successful, please login
               </Alert>
             )}
-            <Button variant="primary" type="submit">
+           {loginError.error.messages?.map((errorMessage) => {
+              return <Alert variant={'danger'}>{errorMessage}</Alert>;
+            })}
+            <Button variant='primary' type='submit'>
               Login
             </Button>
             <Button
-              variant="link"
+              variant='link'
               onClick={onSwitchCreateAccountModeButtonHandler}
             >
               or create account

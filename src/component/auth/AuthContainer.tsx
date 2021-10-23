@@ -1,19 +1,11 @@
-import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { Route, useHistory } from "react-router";
+import { Route } from "react-router";
 
 import CreateAccount from "./authForm/createAccount/CreateAccount";
 import Login from "./authForm/login/Login";
 
 const AuthContainer = () => {
-  const [isCreateAccountSuccess, setCreateAccountSuccess] = useState(false)
-  const history = useHistory();
 
-
-  const onCreateAccountSuccess = () => {
-    setCreateAccountSuccess(true)
-    history.push("/login");
-  }
 
   return (
     <Container>
@@ -21,10 +13,10 @@ const AuthContainer = () => {
         <Col></Col>
         <Col>
           <Route path="/login">
-            <Login isCreatedAccoountSuccessContext={isCreateAccountSuccess}></Login>
+            <Login></Login>
           </Route>
           <Route path="/createAccount">
-            <CreateAccount onCreateAccountSuccessHandler={onCreateAccountSuccess}></CreateAccount>
+            <CreateAccount></CreateAccount>
           </Route>
         </Col>
         <Col></Col>

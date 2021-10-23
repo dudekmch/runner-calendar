@@ -1,59 +1,71 @@
-import { createUserWithEmailAndPassword } from "@firebase/auth";
-import { useRef, useEffect } from "react";
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-import { useHistory } from "react-router";
-import { firebaseAuth } from "../../../../Firebase"
-import StyledContainer from "../../../common/container/StyledContainer";
-import { ICreateAccountProps } from "./CreateAccountModel";
-import useCredentials, { CredentialActionType } from "./UseCredentials";
+import {createUserWithEmailAndPassword} from '@firebase/auth';
+import {useRef} from 'react';
+import {Alert, Button, Col, Form, Row} from 'react-bootstrap';
+import {useHistory} from 'react-router';
+import {firebaseAuth} from '../../../../Firebase';
+import useError from '../../../../hook/UseError';
+import StyledContainer from '../../../common/container/StyledContainer';
 
-const CreateAccount = (props: ICreateAccountProps) => {
+const CreateAccount = () => {
   const history = useHistory();
-  const credentials = useCredentials()
+  const responseError = useError();
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const passwordConfirmationInputRef = useRef<HTMLInputElement>(null);
 
   const submitHandler = (event: React.FormEvent<EventTarget>) => {
+    event.preventDefault();
     if (
       passwordInputRef.current &&
       passwordConfirmationInputRef.current &&
       emailInputRef.current
     ) {
-      credentials.dispatchCredential({
-        type: CredentialActionType.checkCredetialValid,
-        payload: {
-          email: emailInputRef.current.value,
-          password: passwordInputRef.current.value,
-          repeatedPassword: passwordConfirmationInputRef.current.value,
-        },
-      });
-      event.preventDefault();
+      const isPasswordValid = checkIsPasswordValid(passwordInputRef.current.value);
+      const isPasswordConfirmed = passwordInputRef.current.value === passwordConfirmationInputRef.current.value
+      if(isPasswordValid && isPasswordConfirmed){
+        fetchCreateAccountData(emailInputRef.current.value, passwordInputRef.current.value)
+      } else {
+        responseError.setError({
+          isError: true,
+          messages: createPasswordValidationErrors(isPasswordConfirmed, isPasswordValid)
+        })
+      }
     }
   };
 
-  useEffect(() => {
-    
-    if (credentials.email &&
-      credentials.passwordValue &&
-      credentials.isPasswordConfirmed &&
-      credentials.isPasswordValid) {
-      createUserWithEmailAndPassword(firebaseAuth, credentials.email, credentials.passwordValue)
-        .then((userCredential) => {
-          console.log(userCredential)
-          props.onCreateAccountSuccessHandler()
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error(errorCode, errorMessage)
-        });
+  const createPasswordValidationErrors = (isConfirmed: boolean, isValid: boolean) : string[]=> {
+    const errors: string[] = [];
+    if(!isValid){
+      errors.push('The password does not meet the requirements')
     }
-  }, [credentials, props]);
+    if(!isConfirmed){
+      errors.push('Passwords are different')
+    }
+    return errors;
+  }
+
+  const checkIsPasswordValid = (password: string): boolean => {
+    return password.length >= 8;
+  };
+
+  const fetchCreateAccountData = (email: string, password: string) => {
+    createUserWithEmailAndPassword(firebaseAuth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+        history.push('/login?createUserSuccess=true');
+      })
+      .catch((error) => {
+        console.error(error.message);
+        responseError.setError({
+          isError: true,
+          messages: [error.message],
+        });
+      });
+  };
 
   const onSwitchLogInModeButtonHandler = () => {
-    history.push("/login");
+    history.push('/login');
   };
 
   return (
@@ -61,52 +73,47 @@ const CreateAccount = (props: ICreateAccountProps) => {
       <Row>
         <Col>
           <Form onSubmit={submitHandler}>
-            <Form.Group className="mb-3" controlId="formCreateAccountEmail">
+            <Form.Group className='mb-3' controlId='formCreateAccountEmail'>
               <Form.Label>Email address</Form.Label>
               <Form.Control
-                type="email"
-                placeholder="Enter email"
+                type='email'
+                placeholder='Enter email'
                 ref={emailInputRef}
                 required
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formCreateAccountPassword">
+            <Form.Group className='mb-3' controlId='formCreateAccountPassword'>
               <Form.Label>Password</Form.Label>
               <Form.Control
-                type="password"
-                placeholder="Password"
+                type='password'
+                placeholder='Password'
                 ref={passwordInputRef}
                 required
               />
-              <Form.Text className="text-muted">
-                Haslo musi się składać z co najmniej 8. znaków
+              <Form.Text className='text-muted'>
+                The password must contain at least 8 characters
               </Form.Text>
             </Form.Group>
             <Form.Group
-              className="mb-3"
-              controlId="formCreateAccountPasswordConfirmation"
+              className='mb-3'
+              controlId='formCreateAccountPasswordConfirmation'
             >
               <Form.Label>Confirm password</Form.Label>
               <Form.Control
-                type="password"
-                placeholder="Repeat password"
+                type='password'
+                placeholder='Repeat password'
                 ref={passwordConfirmationInputRef}
                 required
               />
             </Form.Group>
-            {!credentials.isPasswordValid && (
-                <Alert variant={"danger"}>
-                  Hasło nie spełnia minimalnych wymagań
-                </Alert>
-              )}
-            {!credentials.isPasswordConfirmed && (
-              <Alert variant={"danger"}>Hasła są rózne</Alert>
-            )}
-            <Button variant="primary" type="submit">
+            {responseError.error.messages?.map((errorMessage) => {
+              return <Alert variant={'danger'}>{errorMessage}</Alert>;
+            })}
+            <Button variant='primary' type='submit'>
               Create account
             </Button>
-            <Button variant="link" onClick={onSwitchLogInModeButtonHandler}>
+            <Button variant='link' onClick={onSwitchLogInModeButtonHandler}>
               or login
             </Button>
           </Form>
