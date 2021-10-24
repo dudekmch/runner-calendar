@@ -1,14 +1,19 @@
 import {createUserWithEmailAndPassword} from '@firebase/auth';
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 import {Alert, Button, Col, Form, Row} from 'react-bootstrap';
 import {useHistory} from 'react-router';
 import {firebaseAuth} from '../../../../Firebase';
 import useError from '../../../../hook/UseError';
 import StyledContainer from '../../../common/container/StyledContainer';
+import LoadingSpinner from '../../../common/loadingSpinner/LoadingSpinner';
+
+import styles from '../Loading.module.css';
 
 const CreateAccount = () => {
   const history = useHistory();
   const responseError = useError();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -50,18 +55,21 @@ const CreateAccount = () => {
   };
 
   const fetchCreateAccountData = (email: string, password: string) => {
+    setIsLoading(true)
     createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
         console.log(userCredential);
+        setIsLoading(false);
         history.push('/login?createUserSuccess=true');
       })
       .catch((error) => {
         console.error(error.message);
+        setIsLoading(false);
         responseError.setError({
           isError: true,
           messages: [error.message],
         });
-      });
+      })
   };
 
   const onSwitchLogInModeButtonHandler = () => {
@@ -108,14 +116,23 @@ const CreateAccount = () => {
               />
             </Form.Group>
             {responseError.error.messages?.map((errorMessage) => {
-              return <Alert variant={'danger'}>{errorMessage}</Alert>;
+              return <Alert key={errorMessage} variant={'danger'}>{errorMessage}</Alert>;
             })}
+            {!isLoading && (
+              <>
             <Button variant='primary' type='submit'>
               Create account
             </Button>
             <Button variant='link' onClick={onSwitchLogInModeButtonHandler}>
               or login
             </Button>
+            </>
+            )}
+             {isLoading && (
+              <div className={styles.loading}>
+                <LoadingSpinner/ >
+              </div>
+            )}
           </Form>
         </Col>
       </Row>
