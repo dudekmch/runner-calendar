@@ -5,12 +5,18 @@ import {NavLink} from 'react-router-dom';
 
 import styles from './NavbarHeader.module.css';
 import Logo from '../common/logo/Logo';
+import {ICurrentUser} from '../../store/auth';
+import {RootStateOrAny, useSelector} from 'react-redux';
 
 const NavbarHeader = () => {
+  const user: ICurrentUser = useSelector(
+    (state: RootStateOrAny) => state.authUser.currentUser
+  );
+
   return (
     <Navbar className={styles['navbar-header']}>
       <Navbar.Brand as={NavLink} to='/welcome'>
-         <Logo />
+        <Logo />
         Runner Calendar
       </Navbar.Brand>
       <Navbar.Toggle aria-controls='basic-navbar-nav' />
@@ -36,13 +42,25 @@ const NavbarHeader = () => {
           </NavDropdown>
         </Nav>
         <Navbar.Collapse className='justify-content-end'>
-          <Nav.Link as={NavLink} to='/login'>
-            Login
-          </Nav.Link>
-          or
-          <Nav.Link as={NavLink} to='/createAccount'>
-            Create account
-          </Nav.Link>
+          {!user && (
+            <>
+              <Nav.Link as={NavLink} to='/auth/login'>
+                Login
+              </Nav.Link>
+              or
+              <Nav.Link as={NavLink} to='/auth/createAccount'>
+                Create account
+              </Nav.Link>
+            </>
+          )}
+          {user && (
+            <>
+            <p>{user.email}</p>
+            <Nav.Link as={NavLink} to='/auth/logout'>
+              Logout
+            </Nav.Link>
+            </>
+          )}
         </Navbar.Collapse>
       </Navbar.Collapse>
     </Navbar>

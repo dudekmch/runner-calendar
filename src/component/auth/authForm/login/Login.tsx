@@ -3,12 +3,13 @@ import {signInWithEmailAndPassword} from 'firebase/auth';
 import {firebaseAuth} from '../../../../Firebase';
 import {Alert, Button, Col, Form, Row} from 'react-bootstrap';
 import {useHistory, useLocation} from 'react-router';
+
 import StyledContainer from '../../../common/container/StyledContainer';
 
 import useError from '../../../../hook/UseError';
 import LoadingSpinner from '../../../common/loadingSpinner/LoadingSpinner';
 
-import styles from '../Loading.module.css';
+import styles from '../../Loading.module.css';
 
 const Login = () => {
   const history = useHistory();
@@ -48,7 +49,7 @@ const Login = () => {
   };
 
   const onSwitchCreateAccountModeButtonHandler = () => {
-    history.push('/createAccount');
+    history.push('/auth/createAccount');
   };
 
   return (
@@ -75,6 +76,7 @@ const Login = () => {
                 required
               />
             </Form.Group>
+            
             {isCreateAccountSuccessfulContext && (
               <Alert variant={'success'}>
                 registration was successful, please login

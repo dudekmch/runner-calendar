@@ -7,7 +7,7 @@ import useError from '../../../../hook/UseError';
 import StyledContainer from '../../../common/container/StyledContainer';
 import LoadingSpinner from '../../../common/loadingSpinner/LoadingSpinner';
 
-import styles from '../Loading.module.css';
+import styles from '../../Loading.module.css';
 
 const CreateAccount = () => {
   const history = useHistory();
@@ -58,9 +58,8 @@ const CreateAccount = () => {
     setIsLoading(true)
     createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
-        console.log(userCredential);
         setIsLoading(false);
-        history.push('/login?createUserSuccess=true');
+        history.push('/auth/login?createUserSuccess=true');
       })
       .catch((error) => {
         console.error(error.message);
@@ -73,7 +72,7 @@ const CreateAccount = () => {
   };
 
   const onSwitchLogInModeButtonHandler = () => {
-    history.push('/login');
+    history.push('/auth/login');
   };
 
   return (

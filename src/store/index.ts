@@ -1,10 +1,11 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { IInterval } from "../model/Training";
+import {configureStore, createSlice} from '@reduxjs/toolkit';
+import {IInterval} from '../model/Training';
+import { authReducers } from './auth';
 
-const trainingTableIntervalTypeFilterInitState = { filters: [] as string[] };
+const trainingTableIntervalTypeFilterInitState = {filters: [] as string[]};
 
 const trainingTableIntervalTypeFilterSlice = createSlice({
-  name: "trainingTableIntervalTypeFilter",
+  name: 'trainingTableIntervalTypeFilter',
   initialState: trainingTableIntervalTypeFilterInitState,
   reducers: {
     addFilter(state, action) {
@@ -26,11 +27,14 @@ const trainingTableIntervalSelectedRowInitState = {
 };
 
 const trainingTableIntervalSelectedRowSlice = createSlice({
-  name: "trainingTableIntervalSelectedRow",
+  name: 'trainingTableIntervalSelectedRow',
   initialState: trainingTableIntervalSelectedRowInitState,
   reducers: {
     rowHandle(state, action) {
-      if (state.selectedRows.filter(row => row.id === action.payload.id).length > 0) {
+      if (
+        state.selectedRows.filter((row) => row.id === action.payload.id)
+          .length > 0
+      ) {
         state.selectedRows = state.selectedRows.filter(
           (row) => row.id !== action.payload.id
         );
@@ -48,6 +52,7 @@ const store = configureStore({
   reducer: {
     intervalTypesFilter: trainingTableIntervalTypeFilterSlice.reducer,
     intervalSelectedRow: trainingTableIntervalSelectedRowSlice.reducer,
+    authUser: authReducers,
   },
 });
 

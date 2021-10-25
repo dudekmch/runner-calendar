@@ -1,7 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector, RootStateOrAny } from "react-redux";
 import { useState } from "react";
-import { Route } from "react-router";
 
 import { CheckBoxType } from "../../common/checkbox/CheckBoxModel";
 import FilterForm from "../filterFormContainer/FilterForm";
@@ -37,7 +36,6 @@ const TrainingTableContainer = () => {
   };
 
   return (
-    <Route path="/trainingTable">
     <Container>
       <HeaderContainer
         selectedRows={selectedRows}
@@ -76,7 +74,6 @@ const TrainingTableContainer = () => {
         )}
       </StyledContainer>
     </Container>
-    </Route>
   );
 };
 
