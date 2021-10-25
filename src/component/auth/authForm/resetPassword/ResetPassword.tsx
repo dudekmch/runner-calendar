@@ -1,42 +1,29 @@
+import {sendPasswordResetEmail} from '@firebase/auth';
 import {useRef, useState} from 'react';
-import {signInWithEmailAndPassword} from 'firebase/auth';
+import {Alert, Col, Form, Row, Button, Container} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import {firebaseAuth} from '../../../../Firebase';
-import {Alert, Button, Col, Container, Form, Row} from 'react-bootstrap';
-import {useHistory, useLocation} from 'react-router';
-
-import StyledContainer from '../../../common/container/StyledContainer';
-
+import {useHistory} from 'react-router';
 import useError from '../../../../hook/UseError';
+import StyledContainer from '../../../common/container/StyledContainer';
 import LoadingSpinner from '../../../common/loadingSpinner/LoadingSpinner';
 
 import styles from '../../Loading.module.css';
-import {Link} from 'react-router-dom';
 
-const Login = () => {
-  const history = useHistory();
-  const location = useLocation();
-  const loginError = useError();
+const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
-
   const emailInputRef = useRef<HTMLInputElement>(null);
-  const passwordInputRef = useRef<HTMLInputElement>(null);
-
-  const queryParams = new URLSearchParams(location.search);
-  const isCreateAccountSuccessfulContext =
-    queryParams.get('createUserSuccess') === 'true';
+  const loginError = useError();
+  const history = useHistory();
 
   const submitHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault();
-    if (emailInputRef.current?.value && passwordInputRef.current?.value) {
+    if (emailInputRef.current?.value) {
       setIsLoading(true);
-      signInWithEmailAndPassword(
-        firebaseAuth,
-        emailInputRef.current.value,
-        passwordInputRef.current.value
-      )
+      sendPasswordResetEmail(firebaseAuth, emailInputRef.current.value)
         .then((userCredential) => {
           setIsLoading(false);
-          history.push('/trainingTable');
+          history.push('/login');
         })
         .catch((error) => {
           console.error(error.message);
@@ -57,7 +44,7 @@ const Login = () => {
           <StyledContainer>
             <Row>
               <Col>
-                <h2>Log In</h2>
+                <h2>Reset Password</h2>
                 <Form onSubmit={submitHandler}>
                   <Form.Group className='mb-3' controlId='formLoginEmail'>
                     <Form.Label>Email address</Form.Label>
@@ -68,22 +55,6 @@ const Login = () => {
                       required
                     />
                   </Form.Group>
-
-                  <Form.Group className='mb-3' controlId='formLoginPassword'>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                      type='password'
-                      placeholder='Password'
-                      ref={passwordInputRef}
-                      required
-                    />
-                  </Form.Group>
-
-                  {isCreateAccountSuccessfulContext && (
-                    <Alert variant={'success'}>
-                      registration was successful, please login
-                    </Alert>
-                  )}
                   {loginError.error.messages?.map((errorMessage) => {
                     return (
                       <Alert key={errorMessage} variant={'danger'}>
@@ -91,14 +62,13 @@ const Login = () => {
                       </Alert>
                     );
                   })}
-
                   {!isLoading && (
                     <>
                       <Button variant='primary' type='submit' className='w-100'>
-                        Login
+                        Reset Password
                       </Button>
                       <div className='w-100 text-center mt-2'>
-                        <Link to='/auth/resetPassword'>Forgot Password?</Link>
+                        <Link to='/auth/login'>Login</Link>
                       </div>
                     </>
                   )}
@@ -111,9 +81,6 @@ const Login = () => {
               </Col>
             </Row>
           </StyledContainer>
-          <div className='w-100 text-center mt-2'>
-            Need an account ? <Link to='/auth/createAccount'>Sign Up</Link>
-          </div>
         </Col>
         <Col></Col>
       </Row>
@@ -121,4 +88,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

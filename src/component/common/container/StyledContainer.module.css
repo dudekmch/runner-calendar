@@ -21,3 +21,8 @@
   .container-card footer {
     text-align: right;
   }
+
+  .container-card h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
