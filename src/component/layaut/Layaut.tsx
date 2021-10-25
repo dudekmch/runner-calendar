@@ -1,4 +1,4 @@
-import NavbarHeader from "../navbar/NavbarHeader";
+import NavbarWrapper from "../navbar/NavbarWrapper";
 import { ILayautProps } from "./LayautModel";
 
 const Layout = (props: ILayautProps) => {
@@ -6,7 +6,7 @@ const Layout = (props: ILayautProps) => {
 
     return (
         <div>
-            <NavbarHeader />
+            <NavbarWrapper />
             <main>{props.children}</main>
         </div>
     );
