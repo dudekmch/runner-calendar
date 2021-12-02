@@ -26,7 +26,7 @@ const HeaderContainer = (props: IHeaderContainerProps) => {
         {props.isTrainingSet && (
           <Row>
             <Col>
-              <TrainingSummary summaryRow={getSummaryRow()} />
+              <TrainingSummary summaryRow={getSummaryRow()} saveTrainingHandler={props.saveTrainingHandler}/>
             </Col>
             <Col>
               <SelectedRowsSummary selectedRows={props.selectedRows} />

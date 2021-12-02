@@ -1,8 +1,6 @@
-import {sendPasswordResetEmail} from '@firebase/auth';
 import {useRef, useState} from 'react';
 import {Alert, Col, Form, Row, Button, Container} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import {firebaseAuth} from '../../../../Firebase';
 import {useHistory} from 'react-router';
 import useError from '../../../../hook/UseError';
 import StyledContainer from '../../../common/container/StyledContainer';
@@ -19,20 +17,20 @@ const ResetPassword = () => {
   const submitHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault();
     if (emailInputRef.current?.value) {
-      setIsLoading(true);
-      sendPasswordResetEmail(firebaseAuth, emailInputRef.current.value)
-        .then((userCredential) => {
-          setIsLoading(false);
-          history.push('/login');
-        })
-        .catch((error) => {
-          console.error(error.message);
-          setIsLoading(false);
-          loginError.setError({
-            isError: true,
-            messages: [error.message],
-          });
-        });
+      // setIsLoading(true);
+      // sendPasswordResetEmail(firebaseAuth, emailInputRef.current.value)
+      //   .then((userCredential) => {
+      //     setIsLoading(false);
+      //     history.push('/login');
+      //   })
+      //   .catch((error) => {
+      //     console.error(error.message);
+      //     setIsLoading(false);
+      //     loginError.setError({
+      //       isError: true,
+      //       messages: [error.message],
+      //     });
+      //   });
     }
   };
 

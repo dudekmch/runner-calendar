@@ -1,13 +1,15 @@
-import { Col, Container, Row } from "react-bootstrap";
-import { useSelector, RootStateOrAny } from "react-redux";
-import { useState } from "react";
+import {Col, Container, Row} from 'react-bootstrap';
+import {useSelector, RootStateOrAny} from 'react-redux';
+import {useState} from 'react';
 
-import { CheckBoxType } from "../../common/checkbox/CheckBoxModel";
-import FilterForm from "../filterFormContainer/FilterForm";
-import TrainingTable from "../trainingTable/TrainingTable";
-import HeaderContainer from "../headerContainer/HeaderContainer";
-import { IInterval, ITraining } from "../../../model/Training";
-import StyledContainer from "../../common/container/StyledContainer";
+import {CheckBoxType} from '../../common/checkbox/CheckBoxModel';
+import FilterForm from '../filterFormContainer/FilterForm';
+import TrainingTable from '../trainingTable/TrainingTable';
+import HeaderContainer from '../headerContainer/HeaderContainer';
+import {IInterval, ITraining} from '../../../model/Training';
+import StyledContainer from '../../common/container/StyledContainer';
+import {saveTraining} from '../../../service/TrainingService';
+import {ICurrentUser} from '../../../store/auth';
 
 const TrainingTableContainer = () => {
   const [training, setTrainig] = useState({} as ITraining);
@@ -15,6 +17,10 @@ const TrainingTableContainer = () => {
 
   const selectedRows: IInterval[] = useSelector(
     (state: RootStateOrAny) => state.intervalSelectedRow.selectedRows
+  );
+
+  const user: ICurrentUser = useSelector(
+    (state: RootStateOrAny) => state.authUser.currentUser
   );
 
   const onFileLoaded = (training: ITraining) => {
@@ -35,6 +41,12 @@ const TrainingTableContainer = () => {
     return types;
   };
 
+  const saveTrainingHandler = (exerciseTimeStamp: number) => {
+    if (user.id) {
+      saveTraining(training, user.id, exerciseTimeStamp);
+    }
+  };
+
   return (
     <Container>
       <HeaderContainer
@@ -43,6 +55,7 @@ const TrainingTableContainer = () => {
         fileLoadedHandler={onFileLoaded}
         isTrainingSet={isTrainingSet}
         fileRemoveHandler={onFileRemove}
+        saveTrainingHandler={saveTrainingHandler}
       />
       {getDistinctIntervalTypes.length !== 0 && (
         <StyledContainer>
@@ -70,7 +83,7 @@ const TrainingTableContainer = () => {
           </Row>
         )}
         {!isTrainingSet && (
-          <h2 style={{ textAlign: "center" }}>Load *.csv file</h2>
+          <h2 style={{textAlign: 'center'}}>Load *.csv file</h2>
         )}
       </StyledContainer>
     </Container>

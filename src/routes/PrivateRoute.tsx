@@ -7,6 +7,7 @@ import { ICurrentUser } from '../store/auth';
   const PrivateRoute = (props : {children: any, user : ICurrentUser, path: string}) => {
     return (
       <Route
+        path={props.path}
         render={
           ({ location }) => (
             props.user

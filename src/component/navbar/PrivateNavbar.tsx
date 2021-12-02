@@ -9,8 +9,8 @@ const PrivateNavbar = (props: {email: string}) => {
           <Nav.Link as={NavLink} to='/welcome'>
             Welcome
           </Nav.Link>
-          <Nav.Link as={NavLink} to='/pricing'>
-            Pricing
+          <Nav.Link as={NavLink} to='/trainingTable'>
+            Import
           </Nav.Link>
         </Nav>
         <Navbar.Collapse className='justify-content-end'>

@@ -6,6 +6,7 @@ export interface IHeaderContainerProps {
   fileLoadedHandler(fileInput: ITraining):  void;
   fileRemoveHandler(): void;
   isTrainingSet: boolean;
+  saveTrainingHandler: (exerciseTimeStamp: number) => void;
 }
 
 export default IHeaderContainerProps;

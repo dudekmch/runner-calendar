@@ -1,9 +1,7 @@
-import {createUserWithEmailAndPassword} from '@firebase/auth';
 import {useRef, useState} from 'react';
 import {Alert, Button, Col, Container, Form, Row} from 'react-bootstrap';
 import {useHistory} from 'react-router';
 import {Link} from 'react-router-dom';
-import {firebaseAuth} from '../../../../Firebase';
 import useError from '../../../../hook/UseError';
 import StyledContainer from '../../../common/container/StyledContainer';
 import LoadingSpinner from '../../../common/loadingSpinner/LoadingSpinner';
@@ -70,20 +68,21 @@ const CreateAccount = () => {
 
   const fetchCreateAccountData = (email: string, password: string) => {
     setIsLoading(true);
-    createUserWithEmailAndPassword(firebaseAuth, email, password)
-      .then((userCredential) => {
-        setIsLoading(false);
-        history.push('/auth/login?createUserSuccess=true');
-      })
-      .catch((error) => {
-        console.error(error.message);
-        setIsLoading(false);
-        responseError.setError({
-          isError: true,
-          messages: [error.message],
-        });
-      });
-  };
+  //   createUserWithEmailAndPassword(firebaseAuth, email, password)
+  //     .then((userCredential) => {
+  //       setIsLoading(false);
+  //       history.push('/auth/login?createUserSuccess=true');
+  //     })
+  //     .catch((error) => {
+  //       console.error(error.message);
+  //       setIsLoading(false);
+  //       responseError.setError({
+  //         isError: true,
+  //         messages: [error.message],
+  //       });
+  //     });
+  // };
+  }
 
   return (
     <Container>

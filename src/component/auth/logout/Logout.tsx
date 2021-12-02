@@ -1,20 +1,18 @@
-import {signOut} from '@firebase/auth';
 import {useEffect, useState,} from 'react';
 import { createPortal } from 'react-dom'
-import {firebaseAuth} from '../../../Firebase';
 import LoadingSpinnerOverLay from '../../common/loadingSpinnerOverlay/LoadingSpinnerOverlay';
 
 const Logout = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    signOut(firebaseAuth)
-    .then(() => {
-      setIsLoading(false);
-    })
-    .catch((error) => {
+    // signOut(firebaseAuth)
+    // .then(() => {
+    //   setIsLoading(false);
+    // })
+    // .catch((error) => {
       // An error happened.
-    });
+    // });
   }, [])
 
   const createSpinnerOverlay = () => {

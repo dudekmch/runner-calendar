@@ -1,8 +1,6 @@
-import {useRef, useState} from 'react';
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {firebaseAuth} from '../../../../Firebase';
+import {useRef} from 'react';
 import {Alert, Button, Col, Container, Form, Row} from 'react-bootstrap';
-import {useHistory, useLocation} from 'react-router';
+import {useLocation} from 'react-router';
 
 import StyledContainer from '../../../common/container/StyledContainer';
 
@@ -11,12 +9,12 @@ import LoadingSpinner from '../../../common/loadingSpinner/LoadingSpinner';
 
 import styles from '../../Loading.module.css';
 import {Link} from 'react-router-dom';
+import useLogin from './UseLogin';
 
 const Login = () => {
-  const history = useHistory();
   const location = useLocation();
   const loginError = useError();
-  const [isLoading, setIsLoading] = useState(false);
+  const login = useLogin()
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -28,24 +26,11 @@ const Login = () => {
   const submitHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault();
     if (emailInputRef.current?.value && passwordInputRef.current?.value) {
-      setIsLoading(true);
-      signInWithEmailAndPassword(
-        firebaseAuth,
-        emailInputRef.current.value,
-        passwordInputRef.current.value
-      )
-        .then((userCredential) => {
-          setIsLoading(false);
-          history.push('/trainingTable');
-        })
-        .catch((error) => {
-          console.error(error.message);
-          setIsLoading(false);
-          loginError.setError({
-            isError: true,
-            messages: [error.message],
-          });
-        });
+      const credentials = {
+         username: emailInputRef.current.value,
+         password: passwordInputRef.current.value
+      }
+      login.sendLoginRequest(credentials)
     }
   };
 
@@ -92,7 +77,7 @@ const Login = () => {
                     );
                   })}
 
-                  {!isLoading && (
+                  {!login.isLoading && (
                     <>
                       <Button variant='primary' type='submit' className='w-100'>
                         Login
@@ -102,7 +87,7 @@ const Login = () => {
                       </div>
                     </>
                   )}
-                  {isLoading && (
+                  {login.isLoading && (
                     <div className={styles.loading}>
                       <LoadingSpinner />
                     </div>
